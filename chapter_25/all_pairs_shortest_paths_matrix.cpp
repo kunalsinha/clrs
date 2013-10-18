@@ -71,7 +71,7 @@ void Graph::findAllPairsShortestPaths()
     fastFindAllPairsShortestPaths();
 }
 
-//takes O(n^4) time and O(N) space. 
+// Takes O(V^4) time and O(V^3) space. 
 void Graph::slowFindAllPairsShortestPaths()
 {
     std::vector<int_2d_array> shortest_path;
@@ -84,8 +84,8 @@ void Graph::slowFindAllPairsShortestPaths()
     printShortestPaths();
 }
 
-/* Takes O(N^3 lg n) by using repeated squaring method to find matrix product
- * Takes O(1) space
+/* Takes O(V^3 lg V) time by using repeated squaring method to find matrix product
+ * and O(V^2) space
  */
 void Graph::fastFindAllPairsShortestPaths()
 {
@@ -116,6 +116,48 @@ int_2d_array Graph::extend_shortest_path(int_2d_array path, int_2d_array weights
                     new_path[i][j] = std::min(new_path[i][j], path[i][k] + edge_weights[k][j]);
     
     return new_path;
+}
+
+/* Floyd-Warshall algorithm to find all pairs shortest paths in a graph
+ * in O(V^3) time. Implementation takes O(V^2) space
+ */
+void Graph::floydWarshall()
+{
+    int size = vertices.size();
+    int_2d_array kth_matrix(boost::extents[vertices.size()][vertices.size()]);
+    kth_matrix = edge_weights;
+    int_2d_array kand1th_matrix(boost::extents[vertices.size()][vertices.size()]);
+
+    for(int k=0; k<size; ++k)
+    {
+        //reset kth_matrix
+        resetMatrix(kand1th_matrix);
+        for(int i=0; i<size; ++i)
+        {
+            for(int j=0; j<size; j++)
+            {
+                if(kth_matrix[i][k] == std::numeric_limits<int>::max() ||
+                        kth_matrix[k][j] == std::numeric_limits<int>::max())
+                {
+                    int temp = std::numeric_limits<int>::max();
+                    kand1th_matrix[i][j] = kth_matrix[i][j];
+                }
+                else
+                    kand1th_matrix[i][j] = std::min(kth_matrix[i][j], kth_matrix[i][k] + kth_matrix[k][j]);
+            }
+        }
+        kth_matrix = kand1th_matrix;
+    }
+    shortest_paths.resize(boost::extents[vertices.size()][vertices.size()]);
+    shortest_paths = kth_matrix;
+    printShortestPaths();
+}
+
+void Graph::resetMatrix(int_2d_array& matrix)
+{
+    for(int i=0; i<vertices.size(); ++i)
+        for(int j=0; j<vertices.size(); ++j)
+            matrix[i][j] = std::numeric_limits<int>::max();
 }
 
 void Graph::printShortestPaths()

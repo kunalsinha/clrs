@@ -26,4 +26,6 @@ class Graph
         void slowFindAllPairsShortestPaths();
         void fastFindAllPairsShortestPaths();
         void printShortestPaths();
+        void floydWarshall();
+        void resetMatrix(int_2d_array& matrix);
 };

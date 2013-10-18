@@ -3,7 +3,7 @@
 int main()
 {
     Graph g;
-    g.findAllPairsShortestPaths();
+    g.floydWarshall();
     return 0;
 }
 
