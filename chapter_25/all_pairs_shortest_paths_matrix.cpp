@@ -85,7 +85,7 @@ void Graph::slowFindAllPairsShortestPaths()
 }
 
 /* Takes O(N^3 lg n) by using repeated squaring method to find matrix product
- * Currently takes O(lg N) space. Improve to take O(1) space
+ * Takes O(1) space
  */
 void Graph::fastFindAllPairsShortestPaths()
 {
