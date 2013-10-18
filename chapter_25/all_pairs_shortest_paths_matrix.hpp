@@ -23,5 +23,7 @@ class Graph
         void printEdgeWeights();
         int_2d_array extend_shortest_path(int_2d_array path, int_2d_array weights);
         void findAllPairsShortestPaths();
+        void slowFindAllPairsShortestPaths();
+        void fastFindAllPairsShortestPaths();
         void printShortestPaths();
 };

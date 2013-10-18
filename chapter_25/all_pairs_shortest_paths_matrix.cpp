@@ -68,6 +68,12 @@ void Graph::printEdgeWeights()
 
 void Graph::findAllPairsShortestPaths()
 {
+    fastFindAllPairsShortestPaths();
+}
+
+//takes O(n^4) time and O(N) space. 
+void Graph::slowFindAllPairsShortestPaths()
+{
     std::vector<int_2d_array> shortest_path;
     shortest_path.push_back(edge_weights);
     for(int i=2; i<vertices.size(); ++i)
@@ -77,6 +83,23 @@ void Graph::findAllPairsShortestPaths()
     shortest_paths = shortest_path.back();
     printShortestPaths();
 }
+
+/* Takes O(N^3 lg n) by using repeated squaring method to find matrix product
+ * Currently takes O(lg N) space. Improve to take O(1) space
+ */
+void Graph::fastFindAllPairsShortestPaths()
+{
+    shortest_paths.resize(boost::extents[vertices.size()][vertices.size()]);
+    shortest_paths = edge_weights;
+    int i=1;
+    while(i < vertices.size())
+    {
+        shortest_paths = extend_shortest_path(shortest_paths, shortest_paths);
+        i *= 2;
+    }
+    printShortestPaths();
+}
+
 
 int_2d_array Graph::extend_shortest_path(int_2d_array path, int_2d_array weights)
 {
